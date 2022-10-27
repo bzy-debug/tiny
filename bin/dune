@@ -1,0 +1,4 @@
+(executable
+ (public_name tiny)
+ (name main)
+ (libraries tiny))
