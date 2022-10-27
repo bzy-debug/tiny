@@ -1,5 +1,6 @@
 open Tiny.Scanner
-open Tiny.Token
+open Tiny.Parser
+open Tiny.Ast
 
 let read_all_strings filename =
   let file = open_in filename in
@@ -9,7 +10,9 @@ let read_all_strings filename =
 let run code =
   let scanner = make_scanner code in
   let tokens = scan_tokens scanner in
-  List.iter (fun x -> x |> show_token |> print_endline) tokens
+  let state = {tokens = Array.of_list tokens; cur = 0} in
+  let expr = parse_expr state 0 in
+  expr |> show_expr |> print_endline
 
 let run_file filename =
   read_all_strings filename |> run
