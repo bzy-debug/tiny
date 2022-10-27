@@ -1,5 +1,7 @@
 open Token
 
+exception ScanError of string
+
 type scanner = {
   source: string;
   tokens: token list;
@@ -84,9 +86,9 @@ let scan_token scanner =
     | '\n' -> {scanner with line = scanner.line + 1}
     | c when is_digit c ->
         (try number scanner
-        with Failure _ -> failwith (Printf.sprintf "line[%d]: invalid number" scanner.line))
+        with Failure _ -> raise (ScanError (Printf.sprintf "line[%d]: invalid number" scanner.line)))
     | c when is_alpha c -> identifier scanner
-    | _ -> failwith (Printf.sprintf "line[%d]: unexpected char" scanner.line)
+    | _ -> raise (ScanError (Printf.sprintf "line[%d]: unexpected char" scanner.line))
 
 let rec scan_tokens scanner =
   if is_at_end scanner then
