@@ -59,12 +59,13 @@ and parse_atom state =
   let line = tok.line in
   advance state;
   match tok.kind with
-  | Cst ->
-      (match tok.literal with
+  | Cst -> (
+      match tok.literal with
       | LNumber i -> Ast.Cst(Int.of_float i)
       | _ ->
           let msg = Printf.sprintf "line[%d]: Expected a number, but got %s" tok.line (show_token_type tok.kind) in
-          raise (ParseError msg))
+          raise (ParseError msg)
+      )
 
   | LeftParen ->
       let exp = parse_expr state 0 in
