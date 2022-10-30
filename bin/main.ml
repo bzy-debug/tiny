@@ -1,6 +1,8 @@
 open Tiny.Scanner
 open Tiny.Parser
-open Tiny.Ast
+open Tiny.Ir
+open Tiny.Compile
+open Tiny.Vm
 
 let read_all_strings filename =
   let file = open_in filename in
@@ -12,7 +14,12 @@ let run code =
   let tokens = scan_tokens scanner in
   let state = {tokens = Array.of_list tokens; cur = 0} in
   let expr = parse_expr state 0 in
-  expr |> show_expr |> print_endline
+  let ir = lowering expr in
+  let instrs = compile_nameless ir in
+  let value = eval_instr instrs [] in
+  value |> string_of_int |> print_endline
+  (* List.iter (fun i -> i |> show_instr |> print_endline) instrs  *)
+  (* ir |> show_nameless_expr |> print_endline *)
 
 let run_file filename =
   read_all_strings filename |> run
