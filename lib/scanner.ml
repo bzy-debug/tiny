@@ -21,6 +21,7 @@ let make_scanner source = {
 let is_digit c = '0' <= c && c <= '9'
 let is_alpha c = ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
 let is_alpha_dight c = (is_alpha c) || (is_digit c)
+let is_ident c = (is_alpha_dight c) || (c = '_')
 
 let is_at_end scanner =
   scanner.current >= (String.length scanner.source)
@@ -62,7 +63,7 @@ let rec number scanner =
 
 let rec identifier scanner =
   let c = peek scanner in
-  if not (is_alpha_dight c) then
+  if not (is_ident c) then
     let lexeme = get_lexeme scanner in
     let token_type =
     match List.assoc_opt lexeme keywords_map with

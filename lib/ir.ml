@@ -7,6 +7,8 @@ type nameless_expr =
   | NMul of nameless_expr * nameless_expr
   | NVar of int
   | NLet of nameless_expr * nameless_expr
+  | NFn of nameless_expr
+  | NApp of nameless_expr * nameless_expr list
 [@@deriving show]
 
 (* expr -> nameless_expr *)
@@ -18,4 +20,8 @@ let rec lowering_inner venv = function
   | Var s -> NVar (index venv s)
   | Let(x, e1, e2) ->
       NLet(lowering_inner venv e1, lowering_inner (x::venv) e2)
+  | Fn(args, body) ->
+      NFn(lowering_inner (args @ venv) body)
+  | App(rator, rands) ->
+      NApp(lowering_inner venv rator, List.map ( lowering_inner venv ) rands)
   in lowering_inner [] expr

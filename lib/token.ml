@@ -4,6 +4,7 @@ type token_type =
   | Star
   | Add
   | Nil
+  | Fun
   | Equal  
   | Identifier
   | String
@@ -33,5 +34,6 @@ type token = {
 let keywords_map = [
   ("let", Let);
   ("var", Var);
-  ("in", In)
+  ("in", In);
+  ("fun", Fun);
 ]
